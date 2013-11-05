@@ -1,20 +1,45 @@
 #include <algorithm>
 #include <vector>
+#include <queue>
 #include <climits>
 #include <iostream>
 using namespace std;
 
-const int maxnodes = 5000;
-
-int nodes = maxnodes, src, dest;
-int dist[maxnodes], q[maxnodes], work[maxnodes];
+int nodes, src, dest;
+vector<int> dist, work;
+queue<int> q;
 
 struct Edge {
   int to, rev;
   int f, cap;
 };
 
-vector<Edge> g[maxnodes];
+vector<vector<Edge> > g;
+
+void addEdge(int s, int t, int cap);    // Adds bidirectional edge
+bool dinic_bfs();
+int dinic_dfs(int u, int f);
+int maxFlow();
+
+int main() {
+    int n, c;
+    cin >> n >> src >> dest;
+    // Выделение памяти переменным
+    dist.assign(n + 1, 0);
+    work.assign(n + 1, 0);
+    g.assign(n + 1, vector<Edge>());
+    nodes = n;
+
+    //int capacity[][3] = { { 0, 3, 2 }, { 0, 0, 2 }, { 0, 0, 0 } };
+
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++){
+            cin >> c;
+            if (c != 0)
+                addEdge(i, j, c);
+        }
+    cout << maxFlow() << endl;
+}
 
 // Adds bidirectional edge
 void addEdge(int s, int t, int cap){
@@ -25,18 +50,18 @@ void addEdge(int s, int t, int cap){
 }
 
 bool dinic_bfs() {
-  fill(dist, dist + nodes, -1);
+  fill(dist.begin(), dist.end(), -1);
   dist[src] = 0;
-  int qt = 0;
-  q[qt++] = src;
-  for (int qh = 0; qh < qt; qh++) {
-    int u = q[qh];
+  q.push(src);
+  while(!q.empty()) {
+    int u = q.front();
+    q.pop();
     for (int j = 0; j < (int) g[u].size(); j++) {
       Edge &e = g[u][j];
       int v = e.to;
       if (dist[v] < 0 && e.f < e.cap) {
         dist[v] = dist[u] + 1;
-        q[qt++] = v;
+        q.push(v);
       }
     }
   }
@@ -62,27 +87,14 @@ int dinic_dfs(int u, int f) {
   return 0;
 }
 
-int maxFlow(int _src, int _dest) {
-  src = _src;
-  dest = _dest;
+int maxFlow() {
   int result = 0;
   while (dinic_bfs()) {
-    fill(work, work + nodes, 0);
+    fill(work.begin(), work.end(), 0);
     while (int delta = dinic_dfs(src, INT_MAX))
       result += delta;
   }
   return result;
 }
 
-int main() {
-    int n = 3;
-    nodes = n;
 
-    int capacity[][3] = { { 0, 3, 2 }, { 0, 0, 2 }, { 0, 0, 0 } };
-
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            if (capacity[i][j] != 0)
-                addEdge(i, j, capacity[i][j]);
-    cout << (4 == maxFlow(0, 2)) << endl;
-}
