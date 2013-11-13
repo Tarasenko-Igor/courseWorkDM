@@ -3,6 +3,9 @@
 #include <queue>
 #include <climits>
 #include <iostream>
+#include <fstream>
+#include <QString>
+
 using namespace std;
 
 int nodes, src, dest;
@@ -22,23 +25,48 @@ int dinic_dfs(int u, int f);
 int maxFlow();
 
 int main() {
-    int n, c;
-    cin >> n >> src >> dest;
+    int n, m, c;
+    //cin >> n >> src >> dest;
     // Выделение памяти переменным
-    dist.assign(n + 1, 0);
-    work.assign(n + 1, 0);
-    g.assign(n + 1, vector<Edge>());
-    nodes = n;
 
     //int capacity[][3] = { { 0, 3, 2 }, { 0, 0, 2 }, { 0, 0, 0 } };
 
-    for (int i = 0; i < n; i++)
+    /*for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++){
             cin >> c;
             if (c != 0)
                 addEdge(i, j, c);
         }
     cout << maxFlow() << endl;
+    */
+
+    ifstream inf;
+    ofstream outf;
+    QString infName("../courseWorkDM/inputs/input%1.txt");
+    QString outfName("../courseWorkDM/outputs/output.txt");
+
+    outf.open(outfName.toStdString().c_str());
+
+    for (int k = 0; k < 10; ++k){
+
+        inf.open(infName.arg(k).toStdString().c_str());
+        inf >> n >> m >> src >> dest;
+
+        dist.assign(n + 1, 0);
+        work.assign(n + 1, 0);
+        g.assign(n + 1, vector<Edge>());
+        nodes = n;
+
+        int u, v;
+        for (int i = 0; i < m; ++i){
+            inf >> u >> v >> c;
+                   addEdge(u, v, c);
+        }
+
+        outf << maxFlow() << endl;
+        inf.close();
+    }
+    outf.close();
 }
 
 // Adds bidirectional edge
