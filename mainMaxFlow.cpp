@@ -3,8 +3,6 @@
 #include <queue>
 #include <climits>
 #include <iostream>
-#include <fstream>
-#include <QString>
 
 using namespace std;
 
@@ -25,38 +23,27 @@ int dinic_dfs(int u, int f);
 int maxFlow();
 
 int main() {
-    int n, m, c;
+    int n, m, c, u, v;
+    cin >> n >> m;
 
-    ifstream inf;
-    ofstream outf;
-    QString infName("../courseWorkDM/inputs/input%1.txt");
-    QString outfName("../courseWorkDM/outputs/output.txt");
+    src = 0;
+    dest = n - 1;
 
-    outf.open(outfName.toStdString().c_str());
+    dist.assign(n + 1, 0);
+    work.assign(n + 1, 0);
+    g.assign(n + 1, vector<Edge>());
+    nodes = n;
 
-    for (int k = 0; k < 10; ++k){
-
-        inf.open(infName.arg(k).toStdString().c_str());
-        inf >> n >> m >> src >> dest;
-
-        dist.assign(n + 1, 0);
-        work.assign(n + 1, 0);
-        g.assign(n + 1, vector<Edge>());
-        nodes = n;
-
-        int u, v;
-        for (int i = 0; i < m; ++i){
-            inf >> u >> v >> c;
-                   addEdge(u, v, c);
-        }
-
-        outf << maxFlow() << endl;
-        inf.close();
+    for (int i = 0; i < m; ++i){
+        cin >> u >> v >> c;
+        addEdge(u - 1, v - 1, c);
     }
-    outf.close();
+    cout << maxFlow() << endl;
 }
 
-// Adds bidirectional edge
+/* Добавляет ребра. Если cap указать для обоих ребер, то тогда
+ * программа будет работать с неориентированным графом.
+ */
 void addEdge(int s, int t, int cap){
   Edge a = {t, g[t].size(), 0, cap};
   Edge b = {s, g[s].size(), 0, 0};
