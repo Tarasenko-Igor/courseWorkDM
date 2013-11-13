@@ -26,19 +26,6 @@ int maxFlow();
 
 int main() {
     int n, m, c;
-    //cin >> n >> src >> dest;
-    // Выделение памяти переменным
-
-    //int capacity[][3] = { { 0, 3, 2 }, { 0, 0, 2 }, { 0, 0, 0 } };
-
-    /*for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++){
-            cin >> c;
-            if (c != 0)
-                addEdge(i, j, c);
-        }
-    cout << maxFlow() << endl;
-    */
 
     ifstream inf;
     ofstream outf;
@@ -72,7 +59,7 @@ int main() {
 // Adds bidirectional edge
 void addEdge(int s, int t, int cap){
   Edge a = {t, g[t].size(), 0, cap};
-  Edge b = {s, g[s].size(), 0, cap};
+  Edge b = {s, g[s].size(), 0, 0};
   g[s].push_back(a);
   g[t].push_back(b);
 }
