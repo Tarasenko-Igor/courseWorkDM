@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <vector>
 #include <queue>
 #include <climits>
@@ -17,7 +16,7 @@ struct Edge {
 
 vector<vector<Edge> > g;
 
-void addEdge(int s, int t, int cap);    // Adds bidirectional edge
+void addEdge(int s, int t, int cap);
 bool dinic_bfs();
 int dinic_dfs(int u, int f);
 int maxFlow();
